@@ -1,9 +1,10 @@
 import { galleryItems } from './gallery-items.js';
-// Change code below this line
 
 const galleryContainer = document.querySelector('.gallery');
 
 addGalleryToHtml(galleryContainer);
+
+galleryContainer.addEventListener('click', handleClickImage);
 
 function createGallery(arr) {
   return arr
@@ -26,9 +27,7 @@ function addGalleryToHtml(container) {
   container.innerHTML = createGallery(galleryItems);
 }
 
-galleryContainer.addEventListener('click', handleLargeImage);
-
-function handleLargeImage(evt) {
+function handleClickImage(evt) {
   evt.preventDefault();
   if (evt.target.nodeName !== 'IMG') {
     return;
@@ -40,13 +39,13 @@ function handleLargeImage(evt) {
 
   instance.show();
 
-  document.addEventListener(
-    'keydown',
-    evt => {
-      if (evt.code === 'Escape') {
-        instance.close();
-      }
-    },
-    { once: true }
-  );
+  const handleCloseWindowEsc = evt => {
+    if (evt.code !== 'Escape') {
+      return;
+    }
+    instance.close();
+    document.removeEventListener('keydown', handleCloseWindowEsc);
+  };
+
+  document.addEventListener('keydown', handleCloseWindowEsc);
 }
